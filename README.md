@@ -1,351 +1,136 @@
-🏛️ Global Macro Intelligence Terminal
+# 🏛️ USD Macro Intelligence Terminal
 
-Institutional-grade macroeconomic intelligence platform delivering real-time directional bias, quantitative scoring, intermarket analysis, and policymaker impact assessment across USD, Gold, Silver, Bitcoin, Equities, and Major FX Markets.
+An institutional-grade, high-frequency macroeconomic intelligence platform engineered to calculate real-time directional probability vectors across major asset classes (**USD, Gold, Silver, BTC, and S&P 500**).
 
-https://img.shields.io/badge/Status-Production-green https://img.shields.io/badge/Next.js-14-black https://img.shields.io/badge/TypeScript-5.x-blue https://img.shields.io/badge/PostgreSQL-Database-blue https://img.shields.io/badge/Prisma-ORM-orange
+The system pairs a **Quantitative 8-Factor USD Macro Scoring Engine** backed by direct **St. Louis Fed (FRED)** integrations with a **52-week trailing CFTC Commitment of Traders (COT)** pipeline, dynamic G5 calendar surprise vector calculations, and executive policy transmission modeling.
 
-Overview
+---
 
-Global Macro Intelligence Terminal is a professional market intelligence and decision-support platform designed to transform macroeconomic data into actionable trading insights.
+## 📸 Terminal Features & Asset Modules
 
-The system combines:
+- **Main USD Macro Dashboard (`/`)**: Calculates composite fundamental bias ($[-100, +100]$ PTS) from 8 weighted economic factors alongside real-time SOFR benchmark rates, 10Y real yields (`DFII10`), and credit stress indicators.
+- **Gold Macro Intelligence ($XAU/USD$) (`/xauusd`)**: 5-Factor Intermarket Transmission Model evaluating 10Y TIPS real yield drag, yield curve slope (`T10Y2Y`), breakeven inflation expectations (`T10YIE`), and 12-month trailing COT non-commercial speculator positioning.
+- **Silver Macro Intelligence ($XAG/USD$) (`/xagusd`)**: Hybrid model balancing industrial manufacturing demand (photovoltaic/green energy GDP vectors) against monetary real rate sensitivity.
+- **Bitcoin Macro Intelligence ($BTC/USD$) (`/btc`)**: Macro store-of-value and global liquidity model tracking digital asset COT positioning and central bank rate expectations.
+- **S&P 500 Macro Intelligence ($SPX$) (`/spx`)**: Risk-appetite transmission model evaluating equity multiple compression against TIPS discount rates, corporate credit spreads (BofA High Yield), and USD revenue drag.
+- **Forex Majors Matrix (`/forex-pairs`)**: G5 currency pair directional bias vectors (EUR/USD, GBP/USD, USD/JPY, USD/CAD, AUD/USD).
+- **Central Bank Policy Terminal (`/central-banks`)**: G5 policy rates, target rate probabilities, and meeting schedules.
+- **Trump Policy & Sentiment Tracker (`/trump-tracker`)**: Executive order and policy statement impulse gauges across Trade/Tariffs, Monetary Pressure, Digital Assets, Energy, and Fiscal Expansion.
+- **Dynamic Economic Calendar (`/calendar`)**: G5 high-voltage event radar with automated Z-score surprise index ($\sigma$) calculations.
+- **Institutional Execution Guide (`/guide`)**: 4-step execution framework mapping macro scores into technical H1/H4 order block entries.
 
-8-Factor USD Macro Scoring Engine
-FRED Economic Data Integration
-52-Week CFTC Commitment of Traders (COT) Analytics
-Central Bank Policy Monitoring
-Economic Surprise Modeling
-Intermarket Asset Correlation Frameworks
-Executive Policy & Sentiment Transmission Analysis
+---
 
-The platform continuously evaluates macroeconomic conditions and generates directional bias scores across major financial markets.
+## 📊 Quantitative 8-Factor USD Engine
 
-Key Capabilities
+The core score engine (`scripts/calculate-macro-score.ts`) evaluates FRED economic series through a customizable factor weight distribution ($[-100, +100]$ PTS total scale):
 
-✅ Quantitative Macro Scoring
+| Macro Factor | Weight | FRED Series / Indicator Code | Focus & Metric Target |
+| :--- | :---: | :--- | :--- |
+| **GDP Growth Momentum** | **20%** | `us_gdp_quarterly` | Real output expansion vs baseline potential |
+| **10Y Real Yield Vector** | **15%** | `us_real_yield_10y` (`DFII10`) | TIPS real interest rate holding cost |
+| **Inflation Pressure (CPI)** | **15%** | `us_cpi_index` (`CPIAUCSL`) | Headline & Core consumer price momentum |
+| **Labor Market Strength** | **15%** | `us_nfp_employment` (`PAYEMS`) | Non-Farm Payroll additions & labor tightness |
+| **Fed Policy & Expectations** | **10%** | `us_sofr_rate` (`SOFR`) | Overnight secured benchmark rate & FOMC stance |
+| **Yield Rate Spreads** | **10%** | `us_yield_spread_10y2y` (`T10Y2Y`) | 10Y-2Y Treasury yield curve slope |
+| **Credit Stress & Risk Regime**| **10%** | `us_nfci_index` (`NFCI`) | Chicago Fed National Financial Conditions Index |
+| **Market Confirmation (DXY)** | **5%** | `us_broad_reer` (`RBUSBIS`) | Broad Real Effective Exchange Rate momentum |
 
-✅ Real-Time Economic Data Analysis
+---
 
-✅ Institutional Market Sentiment Monitoring
+## 🛠️ Tech Stack & Design System
 
-✅ CFTC Positioning Analytics
+- **Framework**: [Next.js 14](https://nextjs.org/) (App Router, Server Components)
+- **Language**: TypeScript (`npx tsx` execution runner)
+- **Database & ORM**: PostgreSQL with [Prisma ORM](https://www.prisma.io/)
+- **Process Manager**: PM2 background runner
+- **Styling**: Tailwind CSS with custom **Pro Bloomberg Terminal** dark tokens (`#06080d` canvas, monospace typography, `macro-card` frames, status badges)
+- **Data Ingestion**: St. Louis Fed (FRED API), CFTC COT weekly reports, custom automated cron sync scripts
 
-✅ Central Bank Policy Tracking
+---
 
-✅ Economic Calendar Impact Assessment
+## 📂 Repository Structure
 
-✅ Cross-Asset Intermarket Intelligence
+```text
+├── app/
+│   ├── page.tsx               # Main USD Macro Dashboard
+│   ├── xauusd/page.tsx        # Gold ($XAU) Dashboard & 12M COT
+│   ├── xagusd/page.tsx        # Silver ($XAG) Dashboard & 12M COT
+│   ├── btc/page.tsx           # Bitcoin ($BTC) Dashboard & 12M COT
+│   ├── spx/page.tsx           # S&P 500 ($SPX) Equity Dashboard
+│   ├── forex-pairs/page.tsx   # G5 Forex Majors Matrix
+│   ├── central-banks/page.tsx # Policy Rates & Schedules
+│   ├── trump-tracker/page.tsx # Policy Transmission Gauges
+│   ├── calendar/page.tsx      # Dynamic Economic Calendar & Z-Score
+│   └── guide/page.tsx         # Institutional Execution Guide
+├── components/
+│   ├── Navbar.tsx             # Sticky Pro Terminal Navigation Bar
+│   ├── BiasGauge.tsx          # Canvas SVG Semi-Circle Macro Gauge
+│   └── EventCountdown.tsx     # High-Voltage Event Timer
+├── prisma/
+│   └── schema.prisma          # PostgreSQL Database Schema
+├── scripts/
+│   ├── ingest-live-data.ts    # FRED API Macro Data Ingestion
+│   ├── calculate-macro-score.ts # 8-Factor USD Scoring Engine
+│   ├── ingest-12m-cot.ts      # 52-Week CFTC COT Position Ingestion
+│   ├── ingest-calendar.ts     # G5 Economic Calendar Event Seeding
+│   ├── seed-trump-tracker.ts  # Executive Policy Transmission Seeding
+│   └── auto-sync.sh           # Automated Background Sync Daemon
+└── public/
+🚀 Quick Start & Installation
+1. Prerequisites
+Node.js: v18.x or higher
 
-✅ Professional Bloomberg-Style Dashboard Interface
+PostgreSQL: Running instance with database credentials
 
-📊 Platform Modules
-🏛️ USD Macro Dashboard (/)
+PM2: Installed globally (npm install -g pm2)
 
-Core macroeconomic intelligence engine powered by an 8-factor weighted scoring framework.
-
-Metrics Evaluated
-GDP Growth Momentum
-10-Year Real Yield Trends
-Inflation Dynamics
-Labor Market Strength
-Federal Reserve Policy Stance
-Yield Curve Signals
-Financial Conditions Index
-DXY Confirmation Signals
-Output
-Composite Macro Score (-100 to +100)
-USD Directional Bias
-Real Yield Environment
-Financial Conditions Assessment
-🥇 Gold Intelligence Terminal (/xauusd)
-
-Intermarket gold valuation framework designed to evaluate the macro drivers affecting precious metals.
-
-Factors
-10-Year TIPS Real Yields
-Yield Curve Structure
-Inflation Expectations
-Dollar Strength
-CFTC Non-Commercial Positioning
-Output
-Gold Bullish/Bearish Bias
-Institutional Positioning Outlook
-Real Yield Sensitivity Analysis
-🥈 Silver Intelligence Terminal (/xagusd)
-
-Hybrid model that evaluates silver's dual role as:
-
-Industrial Metal
-Monetary Asset
-Factors
-Global Manufacturing Activity
-Photovoltaic Demand Trends
-Inflation Expectations
-Real Rates
-Speculative Positioning
-₿ Bitcoin Intelligence Terminal (/btc)
-
-Macro liquidity framework focused on digital assets.
-
-Tracks
-Global Risk Appetite
-Real Interest Rates
-Liquidity Conditions
-Federal Reserve Expectations
-Institutional Crypto Positioning
-Output
-Bitcoin Risk-On/Risk-Off Signals
-Liquidity Cycle Assessment
-Macro Currency Hedge Signals
-📈 S&P 500 Intelligence Terminal (/spx)
-
-Institutional equity valuation framework.
-
-Factors
-Real Interest Rates
-Corporate Credit Spreads
-Financial Conditions
-USD Strength
-Risk Appetite Environment
-Output
-Equity Market Bias
-Valuation Compression Risk
-Macro Risk Regime
-💱 Forex Majors Matrix (/forex-pairs)
-
-G5 currency strength model covering:
-
-EUR/USD
-GBP/USD
-USD/JPY
-USD/CAD
-AUD/USD
-Features
-Relative Macro Strength
-Interest Rate Differentials
-Central Bank Divergence
-Directional Bias Scoring
-🏦 Central Bank Policy Terminal (/central-banks)
-
-Comprehensive monitoring dashboard for:
-
-Federal Reserve
-ECB
-Bank of England
-Bank of Japan
-Bank of Canada
-Reserve Bank of Australia
-Features
-Policy Rates
-Next Meeting Dates
-Rate Expectations
-Forward Guidance Analysis
-📢 Policy & Sentiment Tracker (/policy-tracker)
-
-Measures market impact from executive actions and policy announcements.
-
-Categories
-Trade & Tariffs
-Fiscal Policy
-Digital Assets
-Energy Policy
-Monetary Pressure
-Output
-Market Sentiment Impact Scores
-Risk Asset Sensitivity
-Inflationary/Deflationary Impulse Assessment
-📅 Economic Event Radar (/calendar)
-
-Advanced economic calendar featuring:
-
-Consensus Estimates
-Previous Results
-Volatility Ranking
-Surprise Detection
-Supported Economies
-United States
-Eurozone
-United Kingdom
-Japan
-Canada
-Australia
-🎯 Institutional Execution Guide (/guide)
-
-Framework for converting macro conviction into actionable trade execution.
-
-Workflow
-Assess Macro Score
-Confirm Intermarket Alignment
-Identify Technical Structure
-Execute Risk-Managed Trade Setup
-🧮 8-Factor USD Macro Scoring Engine
-
-The platform's core analytical framework evaluates macroeconomic conditions using weighted economic indicators.
-
-Factor	Weight	Economic SeriesGDP Growth Momentum	20%	GDP
-10Y Real Yield Vector	15%	DFII10
-Inflation Pressure	15%	CPIAUCSL
-Labor Market Strength	15%	PAYEMS
-Fed Policy Expectations	10%	SOFR
-Yield Curve Structure	10%	T10Y2Y
-Financial Conditions	10%	NFCI
-DXY Confirmation	5%	RBUSBIS
-Score Interpretation
-Score Range	Market View+75 to +100	Strongly USD Bullish
-+25 to +74	Moderately USD Bullish
--24 to +24	Neutral
--25 to -74	Moderately USD Bearish
--75 to -100	Strongly USD Bearish
-🛠 Technology Stack
-Frontend
-Next.js 14
-React Server Components
-TypeScript
-Tailwind CSS
-Backend
-Node.js
-Prisma ORM
-PostgreSQL
-Market Data Sources
-Federal Reserve Economic Data (FRED)
-CFTC Commitment of Traders Reports
-Economic Calendar Feeds
-Interest Rate Data Sources
-Operations
-PM2 Process Management
-Linux Cron Automation
-Automated Data Synchronization Scripts
-📂 Project Structure
-Plain Text
-app/
-├── page.tsx
-├── xauusd/page.tsx
-├── xagusd/page.tsx
-├── btc/page.tsx
-├── spx/page.tsx
-├── forex-pairs/page.tsx
-├── central-banks/page.tsx
-├── policy-tracker/page.tsx
-├── calendar/page.tsx
-└── guide/page.tsx
- 
-components/
-├── Navbar.tsx
-├── BiasGauge.tsx
-└── EventCountdown.tsx
- 
-prisma/
-└── schema.prisma
- 
-scripts/
-├── ingest-live-data.ts
-├── calculate-macro-score.ts
-├── ingest-12m-cot.ts
-├── ingest-calendar.ts
-├── seed-policy-tracker.ts
-└── auto-sync.sh
-🚀 Quick Start
-Prerequisites
-Node.js 18+
-PostgreSQL
-PM2
-
-Install PM2:
-
-Shell
-npm install -g pm2
-Clone Repository
-Shell
-git clone https://github.com/sadatia/macro-intelligence.git
- 
+2. Clone & Install Dependencies
+Bash
+git clone [https://github.com/sadatia/macro-intelligence.git](https://github.com/sadatia/macro-intelligence.git)
 cd macro-intelligence
- 
 npm install
-Environment Variables
+3. Environment Configuration
+Create a .env file in the project root:
 
-Create a .env file:
-
-Shell
-env isn’t fully supported. Syntax highlighting is based on Shell.
-DATABASE_URL="postgresql://username:password@localhost:5432/macro_intelligence?schema=public"
- 
-FRED_API_KEY="your_fred_api_key"
- 
+Code snippet
+DATABASE_URL="postgresql://username:password@localhost:5432/usd_macro_db?schema=public"
+FRED_API_KEY="your_st_louis_fed_api_key"
 NODE_ENV="production"
-Database Setup
-Shell
+4. Database Setup & Initial Ingestion
+Bash
+# Push Prisma schema to PostgreSQL
 npx prisma db push
- 
 npx prisma generate
-Initial Data Ingestion
-Shell
+
+# Seed and run initial data ingestion pipeline
 npx tsx --env-file=.env scripts/ingest-live-data.ts
- 
 npx tsx --env-file=.env scripts/calculate-macro-score.ts
- 
 npx tsx --env-file=.env scripts/ingest-12m-cot.ts
- 
 npx tsx --env-file=.env scripts/ingest-calendar.ts
- 
-npx tsx --env-file=.env scripts/seed-policy-tracker.ts
-Development Server
-Shell
-npm run dev
-
-Application:
-
-Plain Text
-http://localhost:3000
-Production Deployment
-
-Build Application
-
-Shell
+npx tsx --env-file=.env scripts/seed-trump-tracker.ts
+5. Production Build & Local Launch
+Bash
+# Production build
 npm run build
 
-Start with PM2
+# Start via PM2
+npx pm2 start npm --name "usd-macro-intelligence" -- start
+npx pm2 save
+🔄 Automated Data Pipeline
+The background daemon script (scripts/auto-sync.sh) maintains data freshness across all dashboard components.
 
-Shell
-pm2 start npm --name "macro-intelligence" -- start
- 
-pm2 save
-🔄 Automated Data Synchronization
+To set up automatic updates every 15 minutes in crontab:
 
-Schedule automatic refresh every 15 minutes.
-
-Shell
+Bash
 crontab -e
+Add the following cron entry:
 
-Add:
-
-Shell
-cron isn’t fully supported. Syntax highlighting is based on Shell.
-*/15 * * * * /root/macro-intelligence/scripts/auto-sync.sh > /dev/null 2>&1
-📈 Intended Users
-Macro Traders
-Forex Traders
-Precious Metals Traders
-Bitcoin Investors
-Hedge Funds
-Proprietary Trading Firms
-Financial Analysts
-Economic Researchers
-🔒 Disclaimer
-
-This platform is designed for educational and informational purposes only.
-
-It does not constitute investment advice, financial advice, or a recommendation to buy or sell any financial instrument. Users are solely responsible for their own trading and investment decisions.
-
+Code snippet
+*/15 * * * * /root/usd-macro-intelligence/scripts/auto-sync.sh >/dev/null 2>&1
 👨‍💻 Author
-
 Md. Ashik E Sadatia
 
-Senior IT Engineer | Solutions Architect | Macro Market Researcher
+Email: sadat.post@gmail.com
 
-📧 sadat.post@gmail.com
-
-🔗 GitHub: https://github.com/sadatia
-
-Vision
-
-Transform macroeconomic complexity into clear, quantitative, and actionable market intelligence.
+GitHub: @sadatia
