@@ -77,7 +77,10 @@ The core score engine (`scripts/calculate-macro-score.ts`) evaluates FRED econom
 │   ├── seed-trump-tracker.ts  # Executive Policy Transmission Seeding
 │   └── auto-sync.sh           # Automated Background Sync Daemon
 └── public/
-🚀 Quick Start & Installation
+
+---
+
+## 🚀 Quick Start & Installation
 1. Prerequisites
 Node.js: v18.x or higher
 
@@ -85,19 +88,21 @@ PostgreSQL: Running instance with database credentials
 
 PM2: Installed globally (npm install -g pm2)
 
-2. Clone & Install Dependencies
+## 2. Clone & Install Dependencies
 Bash
 git clone [https://github.com/sadatia/macro-intelligence.git](https://github.com/sadatia/macro-intelligence.git)
 cd macro-intelligence
 npm install
-3. Environment Configuration
+
+## 3. Environment Configuration
 Create a .env file in the project root:
 
 Code snippet
 DATABASE_URL="postgresql://username:password@localhost:5432/usd_macro_db?schema=public"
 FRED_API_KEY="your_st_louis_fed_api_key"
 NODE_ENV="production"
-4. Database Setup & Initial Ingestion
+
+## 4. Database Setup & Initial Ingestion
 Bash
 # Push Prisma schema to PostgreSQL
 npx prisma db push
@@ -109,7 +114,8 @@ npx tsx --env-file=.env scripts/calculate-macro-score.ts
 npx tsx --env-file=.env scripts/ingest-12m-cot.ts
 npx tsx --env-file=.env scripts/ingest-calendar.ts
 npx tsx --env-file=.env scripts/seed-trump-tracker.ts
-5. Production Build & Local Launch
+
+## 5. Production Build & Local Launch
 Bash
 # Production build
 npm run build
@@ -117,7 +123,10 @@ npm run build
 # Start via PM2
 npx pm2 start npm --name "usd-macro-intelligence" -- start
 npx pm2 save
-🔄 Automated Data Pipeline
+
+---
+
+## 🔄 Automated Data Pipeline
 The background daemon script (scripts/auto-sync.sh) maintains data freshness across all dashboard components.
 
 To set up automatic updates every 15 minutes in crontab:
@@ -128,6 +137,9 @@ Add the following cron entry:
 
 Code snippet
 */15 * * * * /root/usd-macro-intelligence/scripts/auto-sync.sh >/dev/null 2>&1
+
+---
+
 👨‍💻 Author
 Md. Ashik E Sadatia
 
