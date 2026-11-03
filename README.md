@@ -78,11 +78,12 @@ The core score engine (`scripts/calculate-macro-score.ts`) evaluates FRED econom
 │   └── auto-sync.sh           # Automated Background Sync Daemon
 └── public/
 
-
+```
 
 ---
 
 ## 🚀 Quick Start & Installation
+```text
 
 1. Prerequisites
 Node.js: v18.x or higher
@@ -129,23 +130,27 @@ npm run build
 # Start via PM2
 npx pm2 start npm --name "usd-macro-intelligence" -- start
 npx pm2 save
+```
+---
 
-
-🔄 Automated Data Pipeline
+##🔄 Automated Data Pipeline
 The background daemon script (scripts/auto-sync.sh) maintains data freshness across all dashboard components.
 
 To set up automatic updates every 15 minutes in crontab:
-
+```text
 Bash
 crontab -e
 Add the following cron entry:
 
 Code snippet
 */15 * * * * /root/usd-macro-intelligence/scripts/auto-sync.sh >/dev/null 2>&1
+```
 
 
-
-👨‍💻 Author
+---
+## 👨‍💻 Author
+```text
 Md. Ashik E Sadatia
 Email: sadat.post@gmail.com
 GitHub: @sadatia
+```
