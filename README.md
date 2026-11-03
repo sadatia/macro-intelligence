@@ -80,7 +80,7 @@ The core score engine (`scripts/calculate-macro-score.ts`) evaluates FRED econom
 
 ---
 
-## 🚀 Quick Start & Installation
+# 🚀 Quick Start & Installation
 1. Prerequisites
 Node.js: v18.x or higher
 
@@ -126,7 +126,7 @@ npx pm2 save
 
 ---
 
-## 🔄 Automated Data Pipeline
+# 🔄 Automated Data Pipeline
 The background daemon script (scripts/auto-sync.sh) maintains data freshness across all dashboard components.
 
 To set up automatic updates every 15 minutes in crontab:
@@ -140,7 +140,7 @@ Code snippet
 
 ---
 
-👨‍💻 Author
+# 👨‍💻 Author
 Md. Ashik E Sadatia
 
 Email: sadat.post@gmail.com
