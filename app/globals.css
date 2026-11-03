@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-canvas: #06080d;
+  --bg-card: #0b0f19;
+  --border-card: rgba(30, 41, 59, 0.8);
+}
+
+body {
+  background-color: #06080d;
+  color: #f1f5f9;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  overflow-x: hidden;
+}
+
+/* Custom Institutional Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #06080d;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Unified Card Container Class */
+.macro-card {
+  background-color: #0b0f19;
+  border: 1px solid rgba(30, 41, 59, 0.8);
+  border-radius: 0.75rem;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+.macro-card:hover {
+  border-color: rgba(51, 65, 85, 0.9);
+}
+
+/* Unified Badge Design Tokens */
+.macro-badge-emerald {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.macro-badge-rose {
+  background-color: rgba(244, 63, 94, 0.1);
+  color: #fb7185;
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+.macro-badge-amber {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}

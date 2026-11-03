@@ -1,0 +1,185 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum IndicatorDirection {
+  HIGHER_IS_BULLISH
+  LOWER_IS_BULLISH
+  HAWKISH_IS_BULLISH
+  DOVISH_IS_BULLISH
+}
+
+enum PolicyStance {
+  STRONGLY_HAWKISH
+  HAWKISH
+  NEUTRAL
+  DOVISH
+  STRONGLY_DOVISH
+}
+
+enum ProviderStatus {
+  ONLINE
+  WARNING
+  OFFLINE
+  STALE
+}
+
+model Currency {
+  code         String               @id
+  name         String
+  region       String
+  centralBank  String
+  timezone     String
+  weights      CategoryWeight?
+  indicators   Indicator[]
+  macroScores  CurrencyMacroScore[]
+  releases     EconomicRelease[]
+}
+
+model CategoryWeight {
+  id              String   @id @default(uuid())
+  currencyCode    String   @unique
+  currency        Currency @relation(fields: [currencyCode], references: [code])
+  growthWeight    Float    @default(0.25)
+  inflationWeight Float    @default(0.25)
+  laborWeight     Float    @default(0.20)
+  policyWeight    Float    @default(0.20)
+  activityWeight  Float    @default(0.10)
+}
+
+model Indicator {
+  id              String             @id @default(uuid())
+  code            String             @unique
+  currencyCode    String
+  currency        Currency           @relation(fields: [currencyCode], references: [code])
+  name            String
+  category        String
+  weight          Float
+  direction       IndicatorDirection
+  primarySource   String
+  historicalSigma Float              @default(1.0)
+  releases        EconomicRelease[]
+}
+
+model EconomicRelease {
+  id              String    @id @default(uuid())
+  currencyCode    String
+  currency        Currency  @relation(fields: [currencyCode], references: [code])
+  indicatorId     String
+  indicator       Indicator @relation(fields: [indicatorId], references: [id])
+  period          String
+  releaseDate     DateTime
+  actual          Float
+  forecast        Float?
+  previous        Float
+  revisedPrevious Float?
+  unit            String
+  source          String
+  importance      String    @default("HIGH")
+
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([currencyCode, indicatorId, period, releaseDate])
+  @@index([indicatorId, releaseDate])
+  @@index([releaseDate])
+}
+
+model CurrencyMacroScore {
+  id             String   @id @default(uuid())
+  currencyCode   String
+  currency       Currency @relation(fields: [currencyCode], references: [code])
+  growthScore    Float
+  inflationScore Float
+  laborScore     Float
+  policyScore    Float
+  activityScore  Float
+  totalScore     Float
+  classification String
+  confidence     String
+  dataCoverage   Float
+  createdAt      DateTime @default(now())
+
+  @@index([currencyCode, createdAt])
+}
+
+model CotPosition {
+  id               String   @id @default(uuid())
+  assetCode        String   // "XAU", "XAG", "BTC"
+  reportDate       DateTime
+  openInterest     Float
+  nonCommLongs     Float
+  nonCommShorts    Float
+  nonCommNet       Float
+  weeklyLongDelta  Float
+  weeklyShortDelta Float
+  createdAt        DateTime @default(now())
+
+  @@unique([assetCode, reportDate])
+  @@index([assetCode])
+  @@index([reportDate])
+}
+
+model CalendarEvent {
+  id        String   @id @default(uuid())
+  currency  String   // "USD", "EUR", "GBP", "AUD", "NZD"
+  title     String
+  impact    String   // "HIGH VOLTAGE", "HIGH IMPACT", "MEDIUM"
+  eventDate DateTime
+  forecast  String?
+  previous  String?
+  affected  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([eventDate])
+  @@index([currency])
+}
+
+model ProviderHealth {
+  providerName   String         @id
+  status         ProviderStatus
+  lastSuccess    DateTime?
+  lastFailure    DateTime?
+  responseTimeMs Int
+  errorCount     Int            @default(0)
+  updatedAt      DateTime       @updatedAt
+}
+
+model AssetPrice {
+  id        String   @id @default(uuid())
+  symbol    String   @unique
+  name      String
+  price     Float
+  change24h Float    @default(0.0)
+  source    String   @default("FRED")
+  updatedAt DateTime @updatedAt
+}
+
+model TrumpComment {
+  id           String   @id @default(cuid())
+  category     String   // E.g., TRADE & TARIFFS, MONETARY POLICY, DIGITAL ASSETS
+  statement    String   @db.Text
+  usdImpact    Int      // Numeric score e.g., +40 or -35
+  xauImpact    Int      // Numeric score e.g., +50
+  btcImpact    Int      // Numeric score e.g., +85
+  transmission String   @db.Text
+  publishedAt  DateTime @default(now())
+  createdAt    DateTime @default(now())
+}
+
+model CentralBank {
+  id           String   @id @default(cuid())
+  code         String   @unique
+  name         String
+  rate         String
+  stance       String
+  nextDecision DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
