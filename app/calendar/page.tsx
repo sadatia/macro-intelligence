@@ -11,7 +11,7 @@ function sanitizeAffected(val: string | null | undefined, currency: string): str
   if (!val || /^\d/.test(val) || val.includes('%')) {
     switch (currency) {
       case 'USD':
-        return 'USD, Gold ($XAU), Forex Majors, BTC';
+        return 'USD, Gold (XAU), Forex Majors, BTC';
       case 'EUR':
         return 'EUR/USD, EUR/GBP, European Equities';
       case 'GBP':
@@ -162,7 +162,7 @@ export default async function CalendarPage() {
     name: 'U.S. Advance Retail Sales MoM',
     impact: 'HIGH VOLTAGE',
     date: new Date('2026-10-16T12:30:00Z').toISOString(),
-    affected: 'USD, Gold ($XAU), Equity Index Futures, BTC',
+    affected: 'USD, Gold (XAU), Equity Index Futures, BTC',
     forecast: '0.4%',
     previous: '0.1%',
   };

@@ -9,24 +9,43 @@ export const revalidate = 300;
 
 async function getSpxMacroData() {
   try {
-    const usdRecord = await prisma.currencyMacroScore.findFirst({
-      where: { currencyCode: 'USD' },
-      orderBy: { createdAt: 'desc' },
-    });
+    const [usdRecord, realYield, gdpRelease, creditRelease, nfciRelease] = await Promise.all([
+      prisma.currencyMacroScore.findFirst({
+        where: { currencyCode: 'USD' },
+        orderBy: { createdAt: 'desc' },
+      }),
+      prisma.economicRelease.findFirst({
+        where: { indicator: { code: 'us_real_yield_10y' } },
+        orderBy: { releaseDate: 'desc' },
+      }),
+      prisma.economicRelease.findFirst({
+        where: { indicator: { code: 'us_gdp' } },
+        orderBy: { releaseDate: 'desc' },
+      }),
+      prisma.economicRelease.findFirst({
+        where: { indicator: { code: 'us_credit_spread' } },
+        orderBy: { releaseDate: 'desc' },
+      }),
+      prisma.economicRelease.findFirst({
+        where: { indicator: { code: 'us_chicago_nfci' } },
+        orderBy: { releaseDate: 'desc' },
+      }),
+    ]);
 
-    const realYield = await prisma.economicRelease.findFirst({
-      where: { indicator: { code: 'us_real_yield_10y' } },
-      orderBy: { releaseDate: 'desc' },
-    });
-
-    const ryVal = realYield?.actual ?? 2.63;
+    const ryVal = realYield?.actual ?? 2.66;
     const usdScore = usdRecord?.totalScore ?? 33;
+    const gdpVal = gdpRelease?.actual ?? 33010;
+    const hySpreadVal = creditRelease?.actual ?? 3.15;
+    const nfciVal = nfciRelease?.actual ?? -0.459;
 
-    // Equity Multi-Factor Transmission Model
+    // Equity Multi-Factor Transmission Model (Live FRED Driven)
     const realYieldImpact = Math.round(-ryVal * 15); // High real yields compress P/E multiples
-    const growthImpact = 45; // GDP expansion supports corporate earnings
-    const usdImpact = Math.round(-usdScore * 0.4); // Strong USD headwinds S&P 500 international revenue
-    const creditImpact = 35; // Unstressed credit markets provide liquidity tailwinds
+    const growthImpact = Math.min(60, Math.max(-60, Math.round(((gdpVal - 32400) / 1000) * 50)));
+    const usdImpact = Math.round(-usdScore * 0.45); // Strong USD headwinds S&P 500 international revenue
+    const creditImpact = Math.min(
+      50,
+      Math.max(-60, Math.round((4.0 - hySpreadVal) * 20 + -nfciVal * 30))
+    );
 
     const spxScore = Math.min(100, Math.max(-100, Math.round(realYieldImpact + growthImpact + usdImpact + creditImpact)));
 
@@ -64,7 +83,7 @@ export default async function SpxPage() {
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-sky-400"></span>
             <h1 className="text-2xl font-bold tracking-wider text-white uppercase">
-              S&P 500 ($SPX / $US500$) MACRO INTELLIGENCE
+              S&P 500 (SPX / US500) MACRO INTELLIGENCE
             </h1>
           </div>
           <p className="text-xs text-slate-400 mt-1">
