@@ -4,7 +4,7 @@ import BiasGauge from '@/components/BiasGauge';
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 const prisma = globalForPrisma.prisma || new PrismaClient();
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+globalForPrisma.prisma = prisma;
 
 export const revalidate = 300; // Revalidate every 5 minutes
 

@@ -4,7 +4,7 @@ import SyncButton from '@/components/SyncButton';
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 const prisma = globalForPrisma.prisma || new PrismaClient();
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+globalForPrisma.prisma = prisma;
 
 export const revalidate = 0; // Ensure fresh DB query on page render
 
