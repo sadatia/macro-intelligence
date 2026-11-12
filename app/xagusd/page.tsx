@@ -33,8 +33,8 @@ async function getXagusdData() {
         orderBy: { createdAt: 'desc' },
       }),
       prisma.cotPosition.findMany({
-        where: { assetCode: { in: ['SILVER', 'XAG'] } },
-        orderBy: { reportDate: 'asc' },
+        where: { assetCode: 'SILVER', openInterest: { gt: 0 } },
+        orderBy: { reportDate: 'desc' },
         take: 52,
       }),
     ]);
@@ -59,6 +59,7 @@ async function getXagusdData() {
     else if (totalScore <= -25) classification = 'BEARISH DISTRIBUTION';
 
     // Format Database COT Data into Chart Shape (with Fallbacks)
+    cotRecords.reverse();
     const oiData = cotRecords.length > 0
       ? cotRecords.map((r) => ({
           period: new Date(r.reportDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),

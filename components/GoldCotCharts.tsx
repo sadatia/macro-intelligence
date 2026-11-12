@@ -59,7 +59,7 @@ export function GoldCotCharts({
           <div>
             <h2 className="text-xs font-bold text-slate-100 flex items-center gap-2">
               <span className="h-2 w-2 rounded-full" style={{ backgroundColor: themeColor }}></span>
-              • 3. OI VS NET POSITION - CONVICTION OVERLAY ({assetName} 4-MONTH TREND)
+              • 3. OI VS NET POSITION - CONVICTION OVERLAY ({assetName} 12-MONTH TREND)
             </h2>
             <p className="text-[11px] text-slate-400 mt-0.5">
               {assetName} Futures Open Interest (Bar Chart, '000 Contracts) vs Speculator Net Longs (Line Chart, '000 Contracts)
@@ -109,7 +109,7 @@ export function GoldCotCharts({
               }
 
               return (
-                <g key={d.period}>
+                <g key={`${d.period}-${idx}`}>
                   <rect
                     x={x - barWidth / 2}
                     y={barY}
@@ -124,9 +124,11 @@ export function GoldCotCharts({
                   )}
                   <circle cx={x} cy={lineY} r="4" fill="#34d399" stroke="#0b0e17" strokeWidth="2" />
 
-                  <text x={x} y={chart3Height - 8} fill="#94a3b8" fontSize="10" textAnchor="middle">
-                    {d.period}
-                  </text>
+                  {(oiData.length <= 16 || idx % 4 === 0 || idx === oiData.length - 1) && (
+                    <text x={x} y={chart3Height - 8} fill="#94a3b8" fontSize="10" textAnchor="middle">
+                      {d.period}
+                    </text>
+                  )}
                 </g>
               );
             })}
