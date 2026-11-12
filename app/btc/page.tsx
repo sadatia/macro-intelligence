@@ -113,9 +113,9 @@ async function getBtcData() {
 async function getBtcCotData() {
   try {
     const cotRecords = await prisma.cotPosition.findMany({
-      where: { assetCode: 'BTC' },
+      where: { assetCode: { in: ['BITCOIN', 'BTC'] } },
       orderBy: { reportDate: 'asc' },
-      take: 8,
+      take: 52,
     });
 
     if (cotRecords.length > 0) {

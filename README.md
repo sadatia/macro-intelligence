@@ -133,7 +133,7 @@ npx pm2 save
 ```
 ---
 
-##🔄 Automated Data Pipeline
+## 🔄 Automated Data Pipeline
 The background daemon script (scripts/auto-sync.sh) maintains data freshness across all dashboard components.
 
 To set up automatic updates every 15 minutes in crontab:

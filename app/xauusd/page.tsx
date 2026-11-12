@@ -205,7 +205,7 @@ export default async function XauusdPage() {
             <span className="text-amber-400 font-bold">$</span>
           </div>
           <h1 className="text-2xl font-bold tracking-wider text-slate-200">
-            GOLD ($XAU/USD$) MACRO INTELLIGENCE
+            GOLD (XAU/USD) MACRO INTELLIGENCE
           </h1>
         </div>
         <p className="text-xs text-slate-400 mt-1">
@@ -341,11 +341,11 @@ export default async function XauusdPage() {
         </div>
       </section>
 
-      {/* 2. GOLD ($XAU/USD$) INTERMARKET CONFLUENCE ENGINE */}
+      {/* 2. GOLD (XAU/USD) INTERMARKET CONFLUENCE ENGINE */}
       <section className="bg-[#0b0e17] border border-slate-800/80 rounded-xl p-6 space-y-4">
         <h2 className="text-sm font-bold text-slate-300 flex items-center gap-2">
           <span className="h-2 w-2 bg-amber-400 rounded-full"></span>
-          • 2. GOLD ($XAU/USD$) INTERMARKET CONFLUENCE ENGINE
+          • 2. GOLD (XAU/USD) INTERMARKET CONFLUENCE ENGINE
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
           <div className="bg-[#07090e] p-3.5 border border-slate-800/80 rounded-lg">

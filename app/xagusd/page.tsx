@@ -33,9 +33,9 @@ async function getXagusdData() {
         orderBy: { createdAt: 'desc' },
       }),
       prisma.cotPosition.findMany({
-        where: { assetCode: 'XAG' },
+        where: { assetCode: { in: ['SILVER', 'XAG'] } },
         orderBy: { reportDate: 'asc' },
-        take: 8,
+        take: 52,
       }),
     ]);
 
@@ -45,13 +45,13 @@ async function getXagusdData() {
     const breakevenVal = breakeven?.actual ?? 2.29;
     const gdpVal = gdp?.actual ?? 32486;
 
-    const realYieldScore = Math.min(100, Math.max(-100, Math.round((2.0 - realYieldVal) * 50)));
-    const industrialScore = Math.min(100, Math.max(-100, Math.round(((gdpVal - 30000) / 1000) * 15)));
-    const usdScore = Math.min(100, Math.max(-100, Math.round(-usdMacroScore * 2)));
+    const realYieldScore = Math.min(100, Math.max(-100, Math.round((2.0 - realYieldVal) * 65)));
+    const industrialScore = Math.min(100, Math.max(-100, Math.round(((gdpVal - 32800) / 1000) * 25)));
+    const usdScore = Math.min(100, Math.max(-100, Math.round(-usdMacroScore * 2.2)));
     const inflationScore = Math.min(100, Math.max(-100, Math.round((breakevenVal - 2.0) * 80)));
 
     const totalScore = Math.round(
-      realYieldScore * 0.30 + industrialScore * 0.30 + usdScore * 0.20 + inflationScore * 0.20
+      realYieldScore * 0.35 + usdScore * 0.30 + inflationScore * 0.20 + industrialScore * 0.15
     );
 
     let classification = 'NEUTRAL';
@@ -199,7 +199,7 @@ export default async function XagusdPage() {
             </svg>
           </div>
           <h1 className="text-2xl font-bold tracking-wider text-slate-200">
-            SILVER ($XAG/USD$) MACRO INTELLIGENCE
+            SILVER (XAG/USD) MACRO INTELLIGENCE
           </h1>
         </div>
         <p className="text-xs text-slate-400 mt-1">
@@ -320,11 +320,11 @@ export default async function XagusdPage() {
         </div>
       </section>
 
-      {/* 2. SILVER ($XAG/USD$) MACRO CONFLUENCE ENGINE */}
+      {/* 2. SILVER (XAG/USD) MACRO CONFLUENCE ENGINE */}
       <section className="bg-[#0b0e17] border border-slate-800/80 rounded-xl p-6 space-y-4">
         <h2 className="text-sm font-bold text-slate-300 flex items-center gap-2">
           <span className="h-2 w-2 bg-slate-300 rounded-full"></span>
-          • 2. SILVER ($XAG/USD$) MACRO CONFLUENCE ENGINE
+          • 2. SILVER (XAG/USD) MACRO CONFLUENCE ENGINE
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="bg-[#07090e] p-4 border border-slate-800/80 rounded-lg">
