@@ -63,8 +63,8 @@ async function getXagusdData() {
     const oiData = cotRecords.length > 0
       ? cotRecords.map((r) => ({
           period: new Date(r.reportDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-          openInterest: Math.round(r.openInterest / 1000),
-          netLongs: Math.round(r.nonCommNet / 1000),
+          openInterest: r.openInterest > 1000 ? +(r.openInterest / 1000).toFixed(1) : +r.openInterest.toFixed(1),
+          netLongs: Math.abs(r.nonCommNet) > 1000 ? +(r.nonCommNet / 1000).toFixed(1) : +r.nonCommNet.toFixed(1),
         }))
       : [
           { period: 'May W1', openInterest: 125, netLongs: 21 },
